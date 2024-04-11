@@ -1,0 +1,31 @@
+# Use an official base image that includes development tools, like the Go programming language
+FROM golang:alpine as builder
+
+# Install build dependencies, if any
+RUN apk add --no-cache \
+        git \
+        ca-certificates \
+        && update-ca-certificates
+
+# Set work directory
+WORKDIR /app
+
+# Clone source code from repository
+# Replace `URL_TO_TYPESENSE_EXPORTER_REPOSITORY` with the actual repository URL
+RUN git clone URL_TO_TYPESENSE_EXPORTER_REPOSITORY /app
+
+# Build the application
+# Replace `./cmd/typesense-exporter` with the actual build path if different
+RUN go build -o typesense-exporter ./cmd/typesense-exporter
+
+# Use a clean, lightweight image to run the exporter
+FROM alpine:latest
+
+WORKDIR /app
+
+COPY --from=builder /app/typesense-exporter /app/
+
+EXPOSE 9131
+
+# Command to run the exporter
+CMD ["/app/typesense-exporter", "--typesense-api-key=your_api_key_here", "--typesense-host=your_typesense_host_here"]
