@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: typesense-exporter
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: typesense-exporter
+  template:
+    metadata:
+      labels:
+        app: typesense-exporter
+    spec:
+      containers:
+      - name: typesense-exporter
+        image: imatefx/typesense-prometheus-exporter
+        
+        ports:
+        
+        - containerPort: 8888
+        env: # Define necessary environment variables here
+        - name: TYPESENSE_API_KEY
+          value: ""
+        - name: TYPESENSE_HOST
+          value: ""
+        - name: TYPESENSE_PORT
+          value: ""
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: typesense-exporter
+spec:
+  selector:
+    app: typesense-exporter
+  ports:
+    - protocol: TCP
+      port: 8888
+      targetPort: 8888
