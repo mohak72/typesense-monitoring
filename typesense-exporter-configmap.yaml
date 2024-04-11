@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: typesense-exporter-config
+data:
+  TYPESENSE_API_KEY: 
+  TYPESENSE_SERVERS: 
